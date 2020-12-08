@@ -2,8 +2,8 @@
 
 ## Get the code
 ```bash
-$ git clone 
-$ cd Quizlet-clone
+$ git clone https://github.com/NgocNam1512/protein-api
+$ cd protein-api
 ```
 ## Virtualenv modules installation (Unix based systems)
 ```bash
