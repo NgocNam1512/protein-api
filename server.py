@@ -41,26 +41,32 @@ with open('result.json') as json_file:
 def predict():
     data = request.get_json(force=True)
     found = True
-
-    pr1 = data['protein1'].split(".")[0]
-    index1 = proteinList.index(pr1)
-
-    pr2 = data['protein2'].split(".")[0]
-    index2 = proteinList.index(pr2)
-
-    for pr in proteinName:
-        if pr['code'] == pr1:
-            pr1_name = pr['name']
-        if pr['code'] == pr2:
-            pr2_name = pr['name']
-
-    input_data = np.hstack([emb.iloc[index1].to_numpy(), emb.iloc[index2].to_numpy()]).reshape((1,96))
-    prediction = model.predict(input_data)
-    
     dic = {}
-    dic['name'] = {"protein1":pr1_name, "protein2":pr2_name}
-    dic['probability'] = prediction.tolist()
-    dic['iteractions'] = True
+    
+    try:
+        pr1 = data['protein1'].split(".")[0]
+        index1 = proteinList.index(pr1)
+
+        pr2 = data['protein2'].split(".")[0]
+        index2 = proteinList.index(pr2)
+
+        for pr in proteinName:
+            if pr['code'] == pr1:
+                pr1_name = pr['name']
+            if pr['code'] == pr2:
+                pr2_name = pr['name']
+
+        input_data = np.hstack([emb.iloc[index1].to_numpy(), emb.iloc[index2].to_numpy()]).reshape((1,96))
+        prediction = model.predict(input_data)
+        
+        
+        dic['name'] = {"protein1":pr1_name, "protein2":pr2_name}
+        dic['probability'] = prediction.tolist()
+        dic['iteractions'] = True
+        dic['status'] = '200'
+    except:
+        dic['status'] = '404'
+
     return jsonify(dic)
 
 if __name__ == '__main__':
