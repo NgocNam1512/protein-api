@@ -4,6 +4,8 @@ import numpy as np
 from flask import Flask, request, jsonify
 # import pickle
 import pandas as pd
+import json
+from flask_cors import CORS
 
 def create_model():
     model = Sequential()
@@ -25,7 +27,7 @@ model = create_model()
 
 emb = pd.read_csv("emb.csv")
 emb = emb.drop('Unnamed: 0', axis=1)
-
+CORS(app)
 proteinList = []
 with open('proteinList.txt') as f:
     for line in f.readlines():
