@@ -31,21 +31,32 @@ with open('proteinList.txt') as f:
     for line in f.readlines():
         proteinList.append(line.split("\t")[1].split(".")[0])
 
+proteinName = {}
+with open('result.json') as json_file:
+    proteinName = json.load(json_file)
+
 @app.route('/api',methods=['POST'])
 def predict():
     data = request.get_json(force=True)
+    found = True
 
     pr1 = data['protein1'].split(".")[0]
     index1 = proteinList.index(pr1)
-    emb1 = emb.loc()
 
     pr2 = data['protein2'].split(".")[0]
     index2 = proteinList.index(pr2)
 
-    input_data = np.hstack([emb.iloc[index1].to_numpy(), emb.iloc[index1].to_numpy()]).reshape((1,96))
+    for pr in proteinName:
+        if pr['code'] == pr1:
+            pr1_name = pr['name']
+        if pr['code'] == pr2:
+            pr2_name = pr['name']
+
+    input_data = np.hstack([emb.iloc[index1].to_numpy(), emb.iloc[index2].to_numpy()]).reshape((1,96))
     prediction = model.predict(input_data)
     
     dic = {}
+    dic['name'] = {"protein1":pr1_name, "protein2":pr2_name}
     dic['probability'] = prediction.tolist()
     dic['iteractions'] = True
     return jsonify(dic)
