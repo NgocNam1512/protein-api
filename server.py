@@ -62,7 +62,10 @@ def predict():
         
         dic['name'] = {"protein1":pr1_name, "protein2":pr2_name}
         dic['probability'] = prediction.tolist()
-        dic['iteractions'] = True
+        if np.argmax(prediction) == 0:
+            dic['iteractions'] = False
+        else:
+            dic['iteractions'] = True
         dic['status'] = '200'
     except:
         dic['status'] = '404'
